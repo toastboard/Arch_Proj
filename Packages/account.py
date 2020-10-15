@@ -14,7 +14,7 @@ class Cart:
 
 	def calculate_total(self):
 		for x in self.__items_list:
-			self.__total_prices+=x.getPrice()
+			self.__total_price+=x.getPrice()
 
 	def updateQuantity(self, item, new_quantity):
 		for x in self.__items_list:
@@ -27,7 +27,30 @@ class Cart:
 		return self.__total_price
 
 	def getAllItems(self):
-		return self.__items
+		return self.__items_list
+
+	def addItemToCart(self, item):
+		
+		if item in self.__items_list:
+			print("Item already in cart")
+			return False
+
+		else if item not in self.__items_list:
+			self.__items_list.append(item);
+			return updateQuantity(item, 1)
+				
+
+	def deleteItemFromCart(self, item):
+		
+		if item in self.__items_list:
+			self.__items_list.remove(item);
+			return updateQuantity(item, 0)
+				
+		else if item not in self.__items_list:
+			print("Item not found in cart")
+			return False
+			
+
 
 	def makePurchase(self, shipping_address, credit_card_number):
 		pass
