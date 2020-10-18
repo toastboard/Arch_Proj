@@ -1,5 +1,6 @@
 import items
 import sqlite3
+from datetime import date
 
 conn = sqlite3.connect("database/arch_Proj.db")
 cursor = conn.cursor()
@@ -57,7 +58,11 @@ class Cart:
 
 
 	def makePurchase(self, shipping_address, credit_card_number):
-		pass
+		today = date.today();
+		d1 = strftime("%y-%m-%d")
+		purchaseObject = Purchase(self.username,shipping_address,credit_card_number,d1,self.__items_list,self.__total_price)
+		return purchaseObject.confirmPurchase()
+	
     # TODO: makePurchase class here
 
 
