@@ -1,16 +1,69 @@
+import items
 import sqlite3
+from datetime import date
 
 conn = sqlite3.connect("database/arch_Proj.db")
 cursor = conn.cursor()
 
 class User:
+
     # TODO: User class goes here
     pass
 
 
 class Cart:
-    # TODO: Cart class goes here
-    pass
+	def __init__(self, username):
+		self.__items_list = []
+		self.__username = username
+		self.__total_price = 0
+
+	def calculate_total(self):
+		for x in self.__items_list:
+			self.__total_price+=x.getPrice()
+
+	def updateQuantity(self, item, new_quantity):
+		for x in self.__items_list:
+			if x == item:
+				return x.setQuantityInCart(new_quantity)
+			else:
+				return False
+
+	def getTotalPrice(self):
+		return self.__total_price
+
+	def getAllItems(self):
+		return self.__items_list
+
+	def addItemToCart(self, item):
+		
+		if item in self.__items_list:
+			print("Item already in cart")
+			return False
+
+		else if item not in self.__items_list:
+			self.__items_list.append(item);
+			return updateQuantity(item, 1)
+				
+
+	def deleteItemFromCart(self, item):
+		
+		if item in self.__items_list:
+			self.__items_list.remove(item);
+			return updateQuantity(item, 0)
+				
+		else if item not in self.__items_list:
+			print("Item not found in cart")
+			return False
+			
+
+
+	def makePurchase(self, shipping_address, credit_card_number):
+		today = date.today();
+		d1 = strftime("%y-%m-%d")
+		purchaseObject = Purchase(self.username,shipping_address,credit_card_number,d1,self.__items_list,self.__total_price)
+		return purchaseObject.confirmPurchase()
+	
+    # TODO: makePurchase class here
 
 
 class Purchase:
