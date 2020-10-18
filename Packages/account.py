@@ -1,4 +1,4 @@
-import items
+import Packages.items
 import sqlite3
 from datetime import date
 
@@ -39,40 +39,34 @@ class Cart:
 		if item in self.__items_list:
 			print("Item already in cart")
 			return False
-
-		else if item not in self.__items_list:
-			self.__items_list.append(item);
-			return updateQuantity(item, 1)
-				
+		elif item not in self.__items_list:
+			self.__items_list.append(item)
+			return self.updateQuantity(item, 1)
 
 	def deleteItemFromCart(self, item):
 		
 		if item in self.__items_list:
-			self.__items_list.remove(item);
-			return updateQuantity(item, 0)
+			self.__items_list.remove(item)
+			return self.updateQuantity(item, 0)
 				
-		else if item not in self.__items_list:
+		elif item not in self.__items_list:
 			print("Item not found in cart")
 			return False
-			
-
 
 	def makePurchase(self, shipping_address, credit_card_number):
-		today = date.today();
-		d1 = strftime("%y-%m-%d")
-		purchaseObject = Purchase(self.username,shipping_address,credit_card_number,d1,self.__items_list,self.__total_price)
-		return purchaseObject.confirmPurchase()
-	
-    # TODO: makePurchase class here
+		today = date.today()
+		d1 = today.strftime("%y-%m-%d")
+		purchaseObject = Purchase(self.__username,shipping_address,credit_card_number,d1,self.__items_list,self.__total_price)
+		return purchaseObject
 
 
 class Purchase:
-    def __init__(self, username, shipping_address, card_number, date, items_in_cart, total):
+    def __init__(self, username, shipping_address, card_number, purchase_date, items_in_cart, total):
         self.__purchase_id = -1
         self.__username = username
         self.__shipping_address = shipping_address
         self.__card_number = card_number
-        self.__date = date
+        self.__date = purchase_date
         self.__confirmed = False
         self.__items_in_cart = items_in_cart
         self.__total = total
