@@ -1,14 +1,50 @@
-import Packages.items
+#import items
 import sqlite3
 from datetime import date
 
-conn = sqlite3.connect("database/arch_Proj.db")
+conn = sqlite3.connect("database/arch_proj.db")
 cursor = conn.cursor()
 
 class User:
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
 
-    # TODO: User class goes here
-    pass
+    def login(self, username, password):
+        result = cursor.execute("SELECT * FROM user WHERE username = ? AND password = ?", (username, password,))
+        result = result.fetchall()
+        if(result):
+            print("\nYou are in!\n")
+            return 1
+        else:
+            print("\nUsername or Password is wrong\n")
+            return 0
+
+    def logout(self):
+        username = ""
+        password = ""
+        print("You are logged out")
+        return 0
+
+    def getUsername(self, id):
+        result = cursor.execute("SELECT username FROM user WHERE id = (?)", (id,) )
+        result = result.fetchall()
+        return result[0][0]
+
+    def getPurchase(self, purchaseId):
+        result = cursor.execute("SELECT * FROM Purchased_Items WHERE purchase_id = ?", (purchaseId,))
+        result = result.fetchall()
+        return result
+
+    def getPurchases(self, username):
+        #result = cursor.execute("SELECT * FROM Purchases WHERE username = ?", (username,))
+        result = cursor.execute("SELECT * FROM Purchases")
+        result = result.fetchall()
+        if(result):
+            for item in result:
+                print(item)
+        else:
+            print("not purchases were detected!\n")
 
 
 class Cart:
@@ -35,7 +71,7 @@ class Cart:
 		return self.__items_list
 
 	def addItemToCart(self, item):
-		
+
 		if item in self.__items_list:
 			print("Item already in cart")
 			return False
@@ -44,8 +80,9 @@ class Cart:
 			return self.updateQuantity(item, 1)
 
 	def deleteItemFromCart(self, item):
-		
+
 		if item in self.__items_list:
+
 			self.__items_list.remove(item)
 			return self.updateQuantity(item, 0)
 				
@@ -58,6 +95,7 @@ class Cart:
 		d1 = today.strftime("%y-%m-%d")
 		purchaseObject = Purchase(self.__username,shipping_address,credit_card_number,d1,self.__items_list,self.__total_price)
 		return purchaseObject
+
 
 
 class Purchase:
