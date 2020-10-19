@@ -1,8 +1,8 @@
-import items
+#import items
 import sqlite3
 from datetime import date
 
-conn = sqlite3.connect("database/arch_Proj.db")
+conn = sqlite3.connect("database/arch_proj.db")
 cursor = conn.cursor()
 
 class User:
@@ -11,33 +11,41 @@ class User:
         self.password = password
 
     def login(self, username, password):
-        result = cursor.execute("SELECT * FROM user WHERE username = %s AND password = %s", (username, password))
+        result = cursor.execute("SELECT * FROM user WHERE username = ? AND password = ?", (username, password,))
         result = result.fetchall()
         if(result):
-            print("You are in!")
+            print("\nYou are in!\n")
+            return 1
         else:
-            print("Username or Password is wrong")
+            print("\nUsername or Password is wrong\n")
+            return 0
 
     def logout(self):
         username = ""
         password = ""
         print("You are logged out")
+        return 0
 
     def getUsername(self, id):
-        result = cursor.execute("SELECT username FROM user WHERE id = %s", id)
+        result = cursor.execute("SELECT username FROM user WHERE id = (?)", (id,) )
         result = result.fetchall()
-        return result[0]
+        return result[0][0]
 
     def getPurchase(self, purchaseId):
-        result = cursor.execute("SELECT * FROM Purchased_Items WHERE purchase_id = %s", purchaseId)
+        result = cursor.execute("SELECT * FROM Purchased_Items WHERE purchase_id = ?", (purchaseId,))
         result = result.fetchall()
         return result
 
     def getPurchases(self, username):
-        result = cursor.execute("SELECT * FROM Purchased_Items WHERE username = %s", username)
+        #result = cursor.execute("SELECT * FROM Purchases WHERE username = ?", (username,))
+        result = cursor.execute("SELECT * FROM Purchases")
         result = result.fetchall()
-        return result
-        
+        if(result):
+            for item in result:
+                print(item)
+        else:
+            print("not purchases were detected!\n")
+
 
 class Cart:
 	def __init__(self, username):
@@ -68,7 +76,7 @@ class Cart:
 			print("Item already in cart")
 			return False
 
-		else if item not in self.__items_list:
+		elif item not in self.__items_list:
 			self.__items_list.append(item);
 			return updateQuantity(item, 1)
 
@@ -79,7 +87,7 @@ class Cart:
 			self.__items_list.remove(item);
 			return updateQuantity(item, 0)
 
-		else if item not in self.__items_list:
+		elif item not in self.__items_list:
 			print("Item not found in cart")
 			return False
 
