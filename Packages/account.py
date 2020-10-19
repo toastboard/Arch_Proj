@@ -6,10 +6,38 @@ conn = sqlite3.connect("database/arch_Proj.db")
 cursor = conn.cursor()
 
 class User:
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
 
-    # TODO: User class goes here
-    pass
+    def login(self, username, password):
+        result = cursor.execute("SELECT * FROM user WHERE username = %s AND password = %s", (username, password))
+        result = result.fetchall()
+        if(result):
+            print("You are in!")
+        else:
+            print("Username or Password is wrong")
 
+    def logout(self):
+        username = ""
+        password = ""
+        print("You are logged out")
+
+    def getUsername(self, id):
+        result = cursor.execute("SELECT username FROM user WHERE id = %s", id)
+        result = result.fetchall()
+        return result[0]
+
+    def getPurchase(self, purchaseId):
+        result = cursor.execute("SELECT * FROM Purchased_Items WHERE purchase_id = %s", purchaseId)
+        result = result.fetchall()
+        return result
+
+    def getPurchases(self, username):
+        result = cursor.execute("SELECT * FROM Purchased_Items WHERE username = %s", username)
+        result = result.fetchall()
+        return result
+        
 
 class Cart:
 	def __init__(self, username):
@@ -35,7 +63,7 @@ class Cart:
 		return self.__items_list
 
 	def addItemToCart(self, item):
-		
+
 		if item in self.__items_list:
 			print("Item already in cart")
 			return False
@@ -43,18 +71,18 @@ class Cart:
 		else if item not in self.__items_list:
 			self.__items_list.append(item);
 			return updateQuantity(item, 1)
-				
+
 
 	def deleteItemFromCart(self, item):
-		
+
 		if item in self.__items_list:
 			self.__items_list.remove(item);
 			return updateQuantity(item, 0)
-				
+
 		else if item not in self.__items_list:
 			print("Item not found in cart")
 			return False
-			
+
 
 
 	def makePurchase(self, shipping_address, credit_card_number):
@@ -62,7 +90,7 @@ class Cart:
 		d1 = strftime("%y-%m-%d")
 		purchaseObject = Purchase(self.username,shipping_address,credit_card_number,d1,self.__items_list,self.__total_price)
 		return purchaseObject.confirmPurchase()
-	
+
     # TODO: makePurchase class here
 
 
