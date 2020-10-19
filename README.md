@@ -1,5 +1,6 @@
 # Arch_Proj
 Architecture Project
+
 To be able to Run this code, Please follow the following:
 
   - Clone the github repository using the following command: `git clone https://github.com/toastboard/Arch_Proj.git`
